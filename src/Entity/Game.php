@@ -26,11 +26,17 @@ class Game
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imageUrl = null;
+
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $platform = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $genre = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $publisher = null;
 
     #[ORM\Column(type: 'date', nullable: true)]
     private ?\DateTimeInterface $releaseDate = null;
@@ -40,6 +46,9 @@ class Game
 
     #[ORM\Column(type: 'integer')]
     private int $stock = 0;
+
+    #[ORM\Column(type: 'integer')]
+    private int $stockQuantity = 0;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
@@ -101,6 +110,17 @@ class Game
         return $this;
     }
 
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
+        return $this;
+    }
+
     public function getPlatform(): ?string
     {
         return $this->platform;
@@ -120,6 +140,17 @@ class Game
     public function setGenre(?string $genre): self
     {
         $this->genre = $genre;
+        return $this;
+    }
+
+    public function getPublisher(): ?string
+    {
+        return $this->publisher;
+    }
+
+    public function setPublisher(?string $publisher): self
+    {
+        $this->publisher = $publisher;
         return $this;
     }
 
@@ -153,6 +184,19 @@ class Game
     public function setStock(int $stock): self
     {
         $this->stock = $stock;
+        $this->stockQuantity = $stock; // Sync both fields
+        return $this;
+    }
+
+    public function getStockQuantity(): int
+    {
+        return $this->stockQuantity;
+    }
+
+    public function setStockQuantity(int $stockQuantity): self
+    {
+        $this->stockQuantity = $stockQuantity;
+        $this->stock = $stockQuantity; // Sync both fields
         return $this;
     }
 
