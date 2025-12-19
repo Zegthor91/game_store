@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ game.title }} - Game Store{% endblock %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('app_shop') }}">Boutique</a></li>
+        <li class="breadcrumb-item active">{{ game.title }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-5">
+        {% if game.imageUrl %}
+            <img src="{{ game.imageUrl }}" class="img-fluid rounded shadow" alt="{{ game.title }}">
+        {% else %}
+            <div class="bg-secondary d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
+                <i class="bi bi-controller display-1 text-white"></i>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-7">
+        <h1 class="mb-3">{{ game.title }}</h1>
+        
+        <div class="mb-3">
+            <span class="badge bg-primary fs-6 me-2">{{ game.platform }}</span>
+            <span class="badge bg-info fs-6">{{ game.genre }}</span>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-1 text-muted">Éditeur</p>
+                        <p class="fw-bold">{{ game.publisher ?? 'Non spécifié' }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-1 text-muted">Date de sortie</p>
+                        <p class="fw-bold">{{ game.releaseDate ? game.releaseDate|date('d/m/Y') : 'Non spécifiée' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-{{ game.stockQuantity > 0 ? 'success' : 'danger' }}">
+            {% if game.stockQuantity > 0 %}
+                <i class="bi bi-check-circle"></i> <strong>En stock</strong> ({{ game.stockQuantity }} disponible{{ game.stockQuantity > 1 ? 's' : '' }})
+            {% else %}
+                <i class="bi bi-x-circle"></i> <strong>Rupture de stock</strong>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-success mb-3">{{ game.price }} €</h3>
+            {% if app.user and game.stockQuantity > 0 %}
+                <form method="post" action="{{ path('app_cart_add', {'id': game.id}) }}">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-cart-plus"></i> Ajouter au panier
+                    </button>
+                </form>
+            {% elseif not app.user %}
+                <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Connectez-vous pour acheter
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Description</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ game.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if similar_games|length > 0 %}
+    <hr class="my-5">
+    <h3 class="mb-4">Jeux similaires</h3>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for similar in similar_games %}
+            {% if similar.id != game.id %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm game-card">
+                        {% if similar.imageUrl %}
+                            <img src="{{ similar.imageUrl }}" class="card-img-top" alt="{{ similar.title }}" style="height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 150px;">
+                                <i class="bi bi-controller display-6 text-white"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h6 class="card-title">{{ similar.title }}</h6>
+                            <span class="badge bg-primary">{{ similar.platform }}</span>
+                            <p class="mt-2 mb-0 fw-bold text-success">{{ similar.price }} €</p>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <a href="{{ path('app_shop_show', {'id': similar.id}) }}" class="btn btn-sm btn-outline-primary w-100">
+                                Voir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

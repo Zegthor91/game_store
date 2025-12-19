@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-person-circle"></i> Mon profil</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="border-bottom pb-2 mb-3">Informations personnelles</h5>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Prénom :</div>
+                    <div class="col-sm-8">{{ user.firstName }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Nom :</div>
+                    <div class="col-sm-8">{{ user.lastName }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Email :</div>
+                    <div class="col-sm-8">{{ user.email }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Téléphone :</div>
+                    <div class="col-sm-8">{{ user.phone ?? 'Non renseigné' }}</div>
+                </div>
+                
+                <h5 class="border-bottom pb-2 mb-3 mt-4">Adresse de livraison</h5>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Adresse :</div>
+                    <div class="col-sm-8">{{ user.address ?? 'Non renseignée' }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Code postal :</div>
+                    <div class="col-sm-8">{{ user.postalCode ?? 'Non renseigné' }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Ville :</div>
+                    <div class="col-sm-8">{{ user.city ?? 'Non renseignée' }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Pays :</div>
+                    <div class="col-sm-8">{{ user.country ?? 'Non renseigné' }}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Membre depuis :</div>
+                    <div class="col-sm-8">{{ user.createdAt|date('d/m/Y') }}</div>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> Modifier mon profil
+                </a>
+                <button type="button" class="btn btn-danger float-end" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="bi bi-trash"></i> Supprimer mon compte
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.</p>
+                <p class="text-danger"><strong>Toutes vos commandes et données seront également supprimées.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{{ path('app_profile_delete') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                    <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

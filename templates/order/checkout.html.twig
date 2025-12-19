@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Finaliser la commande - Game Store{% endblock %}
+
+{% block body %}
+<h1 class="mb-4"><i class="bi bi-credit-card"></i> Finaliser la commande</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Informations de livraison</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Nom :</strong> {{ app.user.firstName }} {{ app.user.lastName }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Email :</strong> {{ app.user.email }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Adresse :</strong><br>
+                        {% if app.user.address %}
+                            {{ app.user.address }}<br>
+                            {{ app.user.postalCode }} {{ app.user.city }}<br>
+                            {{ app.user.country }}
+                        {% else %}
+                            <span class="text-muted">Adresse non renseignée</span><br>
+                            <a href="{{ path('app_profile_edit') }}" class="btn btn-sm btn-warning mt-2">
+                                <i class="bi bi-pencil"></i> Compléter mon profil
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Articles commandés</h5>
+            </div>
+            <div class="card-body">
+                {% for item in cart_items %}
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <div>
+                            <strong>{{ item.game.title }}</strong><br>
+                            <small class="text-muted">{{ item.game.platform }} - Quantité : {{ item.quantity }}</small>
+                        </div>
+                        <strong>{{ item.game.price * item.quantity }} €</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Récapitulatif</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Sous-total :</span>
+                    <strong>{{ total }} €</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Livraison :</span>
+                    <strong class="text-success">Gratuite</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>TVA (20%) :</span>
+                    <strong>{{ (total * 0.2)|number_format(2) }} €</strong>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-4">
+                    <strong>Total TTC :</strong>
+                    <strong class="fs-4 text-success">{{ total }} €</strong>
+                </div>
+
+                <form method="post" action="{{ path('app_order_place') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('place_order') }}">
+                    
+                    <div class="alert alert-info">
+                        <small><i class="bi bi-info-circle"></i> Paiement sécurisé par carte bancaire</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mb-2">
+                        <i class="bi bi-check-circle"></i> Confirmer et payer
+                    </button>
+                    <a href="{{ path('app_cart_index') }}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-arrow-left"></i> Retour au panier
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

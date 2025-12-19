@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-pencil"></i> Modifier mon profil</h4>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <h5 class="border-bottom pb-2 mb-3">Informations personnelles</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.firstName) }}
+                            {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.firstName) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.lastName) }}
+                            {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.lastName) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(form.phone) }}
+                            {{ form_widget(form.phone, {'attr': {'class': 'form-control', 'placeholder': '+33 6 12 34 56 78'}}) }}
+                            {{ form_errors(form.phone) }}
+                        </div>
+                    </div>
+
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Adresse de livraison</h5>
+
+                    <div class="mb-3">
+                        {{ form_label(form.address) }}
+                        {{ form_widget(form.address, {'attr': {'class': 'form-control', 'placeholder': '123 Rue de la Paix'}}) }}
+                        {{ form_errors(form.address) }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form_label(form.postalCode) }}
+                            {{ form_widget(form.postalCode, {'attr': {'class': 'form-control', 'placeholder': '75000'}}) }}
+                            {{ form_errors(form.postalCode) }}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            {{ form_label(form.city) }}
+                            {{ form_widget(form.city, {'attr': {'class': 'form-control', 'placeholder': 'Paris'}}) }}
+                            {{ form_errors(form.city) }}
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            {{ form_label(form.country) }}
+                            {{ form_widget(form.country, {'attr': {'class': 'form-control', 'placeholder': 'France'}}) }}
+                            {{ form_errors(form.country) }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('app_profile_show') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Enregistrer les modifications
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

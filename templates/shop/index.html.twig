@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boutique - Game Store{% endblock %}
+
+{% block body %}
+<h1 class="mb-4"><i class="bi bi-shop"></i> Boutique de jeux vidéo</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-funnel"></i> Filtres</h5>
+            </div>
+            <div class="card-body">
+                <form method="get">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Plateforme</label>
+                        <select name="platform" class="form-select" onchange="this.form.submit()">
+                            <option value="">Toutes</option>
+                            {% for platform in platforms %}
+                                <option value="{{ platform }}" {% if current_platform == platform %}selected{% endif %}>
+                                    {{ platform }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Genre</label>
+                        <select name="genre" class="form-select" onchange="this.form.submit()">
+                            <option value="">Tous</option>
+                            {% for genre in genres %}
+                                <option value="{{ genre }}" {% if current_genre == genre %}selected{% endif %}>
+                                    {{ genre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Recherche</label>
+                        <input type="text" name="search" class="form-control" placeholder="Titre du jeu..." value="{{ current_search }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                    <a href="{{ path('app_shop') }}" class="btn btn-outline-secondary w-100 mt-2">Réinitialiser</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        {% if pagination.items|length > 0 %}
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                {% for game in pagination %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm game-card">
+                            {% if game.imageUrl %}
+                                <img src="{{ game.imageUrl }}" class="card-img-top" alt="{{ game.title }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="bi bi-controller display-4 text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ game.title }}</h5>
+                                <p class="card-text text-muted small">{{ game.description|length > 60 ? game.description|slice(0, 60) ~ '...' : game.description }}</p>
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">{{ game.platform }}</span>
+                                    <span class="badge bg-info">{{ game.genre }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-5 fw-bold text-success">{{ game.price }} €</span>
+                                    {% if game.stockQuantity > 0 %}
+                                        <span class="badge bg-success">En stock</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Rupture</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="d-flex gap-2">
+                                    <a href="{{ path('app_shop_show', {'id': game.id}) }}" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                        Détails
+                                    </a>
+                                    {% if app.user and game.stockQuantity > 0 %}
+                                        <form method="post" action="{{ path('app_cart_add', {'id': game.id}) }}">
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="bi bi-cart-plus"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-center">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Aucun jeu trouvé avec ces critères.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

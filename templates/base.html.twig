@@ -1,19 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Game Store{% endblock %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+        <style>
+            .game-card { transition: transform 0.2s; }
+            .game-card:hover { transform: translateY(-5px); }
+            .badge-platform { font-size: 0.8rem; }
+            .price-tag { font-size: 1.5rem; font-weight: bold; color: #198754; }
+        </style>
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('app_home') }}">
+                    <i class="bi bi-controller"></i> Game Store
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_shop') }}">
+                                <i class="bi bi-shop"></i> Boutique
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_contact') }}">Contact</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        {% if app.user %}
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" href="{{ path('app_cart_index') }}">
+                                    <i class="bi bi-cart3"></i> Panier
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i> {{ app.user.firstName }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{{ path('app_profile_show') }}">Mon profil</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_order_history') }}">Mes commandes</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_game_index') }}">Admin - Jeux</a></li>
+                                    {% endif %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login') }}">
+                                    <i class="bi bi-box-arrow-in-right"></i> Connexion
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-primary text-white ms-2" href="{{ path('app_register') }}">
+                                    Inscription
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="py-4">
+            <div class="container">
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                {% block body %}{% endblock %}
+            </div>
+        </main>
+
+        <footer class="bg-dark text-white mt-5 py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5><i class="bi bi-controller"></i> Game Store</h5>
+                        <p class="text-muted">Votre boutique de jeux vidéo en ligne</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Navigation</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="{{ path('app_shop') }}" class="text-white text-decoration-none">Boutique</a></li>
+                            <li><a href="{{ path('app_contact') }}" class="text-white text-decoration-none">Contact</a></li>
+                            <li><a href="{{ path('app_about') }}" class="text-white text-decoration-none">Qui sommes-nous ?</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Informations légales</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="{{ path('app_legal') }}" class="text-white text-decoration-none">Mentions légales</a></li>
+                            <li><a href="{{ path('app_terms') }}" class="text-white text-decoration-none">CGU</a></li>
+                            <li><a href="{{ path('app_sales') }}" class="text-white text-decoration-none">CGV</a></li>
+                            <li><a href="{{ path('app_privacy') }}" class="text-white text-decoration-none">Politique de confidentialité</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="bg-white">
+                <p class="text-center text-muted mb-0">&copy; {{ 'now'|date('Y') }} Game Store. Tous droits réservés.</p>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        {% block javascripts %}{% endblock %}
     </body>
 </html>

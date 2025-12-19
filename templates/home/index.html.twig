@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Game Store{% endblock %}
+
+{% block body %}
+<div class="jumbotron bg-gradient p-5 rounded mb-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="text-white">
+        <h1 class="display-4 fw-bold">Bienvenue chez Game Store 🎮</h1>
+        <p class="lead">Découvrez les meilleurs jeux vidéo pour toutes les plateformes</p>
+        <hr class="my-4 bg-white">
+        <p>PS5, Xbox Series X, Nintendo Switch, PC Gaming et plus encore !</p>
+        <a class="btn btn-light btn-lg" href="{{ path('app_shop') }}" role="button">
+            <i class="bi bi-shop"></i> Parcourir la boutique
+        </a>
+    </div>
+</div>
+
+{% if featured_games is not empty %}
+    <h2 class="mb-4"><i class="bi bi-star-fill text-warning"></i> Jeux en vedette</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        {% for game in featured_games %}
+            <div class="col">
+                <div class="card h-100 shadow game-card">
+                    {% if game.imageUrl %}
+                        <img src="{{ game.imageUrl }}" class="card-img-top" alt="{{ game.title }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="bi bi-controller display-1 text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ game.title }}</h5>
+                        <p class="card-text text-muted">{{ game.description|length > 80 ? game.description|slice(0, 80) ~ '...' : game.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary badge-platform">{{ game.platform }}</span>
+                            <span class="badge bg-info">{{ game.genre }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-tag">{{ game.price }} €</span>
+                            <div>
+                                <a href="{{ path('app_shop_show', {'id': game.id}) }}" class="btn btn-sm btn-outline-primary">
+                                    Détails
+                                </a>
+                                {% if app.user %}
+                                    <form method="post" action="{{ path('app_cart_add', {'id': game.id}) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="bi bi-cart-plus"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if game.stockQuantity < 5 %}
+                        <div class="card-footer bg-warning text-dark">
+                            <small><i class="bi bi-exclamation-triangle"></i> Plus que {{ game.stockQuantity }} en stock !</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if latest_games is not empty %}
+    <h2 class="mb-4"><i class="bi bi-clock-history"></i> Dernières sorties</h2>
+    <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+        {% for game in latest_games %}
+            <div class="col">
+                <div class="card h-100 shadow-sm game-card">
+                    {% if game.imageUrl %}
+                        <img src="{{ game.imageUrl }}" class="card-img-top" alt="{{ game.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-controller display-4 text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h6 class="card-title">{{ game.title }}</h6>
+                        <span class="badge bg-primary badge-platform">{{ game.platform }}</span>
+                        <div class="mt-2">
+                            <span class="fw-bold text-success">{{ game.price }} €</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ path('app_shop_show', {'id': game.id}) }}" class="btn btn-sm btn-outline-primary w-100">
+                            Voir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="row mt-5 text-center">
+    <div class="col-md-3">
+        <div class="p-4">
+            <i class="bi bi-truck display-4 text-primary"></i>
+            <h4 class="mt-3">Livraison rapide</h4>
+            <p class="text-muted">Recevez vos jeux sous 48h</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-4">
+            <i class="bi bi-shield-check display-4 text-success"></i>
+            <h4 class="mt-3">Paiement sécurisé</h4>
+            <p class="text-muted">Transactions 100% sécurisées</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-4">
+            <i class="bi bi-headset display-4 text-info"></i>
+            <h4 class="mt-3">Support 7j/7</h4>
+            <p class="text-muted">Notre équipe à votre écoute</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-4">
+            <i class="bi bi-star-fill display-4 text-warning"></i>
+            <h4 class="mt-3">Jeux certifiés</h4>
+            <p class="text-muted">Produits originaux garantis</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
