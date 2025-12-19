@@ -44,6 +44,9 @@
             "./migrations/.gitignore"
         ]
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.2.0"
+    },
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {
@@ -100,6 +103,15 @@
             "./src/Kernel.php"
         ]
     },
+    "symfony/mailer": {
+        "version": "6.0",
+        "recipe": {
+            "version": "4.3"
+        }
+    },
+    "symfony/maker-bundle": {
+        "version": "v1.48.0"
+    },
     "symfony/routing": {
         "version": "6.0",
         "recipe": {
@@ -125,6 +137,12 @@
             "./config/packages/security.yaml"
         ]
     },
+    "symfony/translation": {
+        "version": "6.0",
+        "recipe": {
+            "version": "5.3"
+        }
+    },
     "symfony/twig-bundle": {
         "version": "6.0",
         "recipe": {
@@ -137,5 +155,8 @@
             "./config/packages/twig.yaml",
             "./templates/base.html.twig"
         ]
+    },
+    "symfonycasts/reset-password-bundle": {
+        "version": "v1.19.0"
     }
 }
