@@ -7,12 +7,10 @@
         "php": ">=8.0.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/annotations": "^2.0",
-        "doctrine/doctrine-bundle": "^2.13",
-        "doctrine/doctrine-migrations-bundle": "^3.7",
-        "doctrine/orm": "^2.20",
-        "knplabs/knp-paginator-bundle": "*",
-        "symfony/apache-pack": "*",
+        "doctrine/doctrine-bundle": "^2.7",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2.12",
+        "knplabs/knp-paginator-bundle": "^5.9",
         "symfony/asset": "6.0.*",
         "symfony/console": "6.0.*",
         "symfony/dotenv": "6.0.*",
@@ -23,8 +21,17 @@
         "symfony/runtime": "6.0.*",
         "symfony/security-bundle": "6.0.*",
         "symfony/twig-bundle": "6.0.*",
+        "symfony/validator": "6.0.*",
         "symfony/yaml": "6.0.*",
-        "symfonycasts/reset-password-bundle": "*"
+        "symfonycasts/reset-password-bundle": "^1.14",
+        "twig/extra-bundle": "^3.3",
+        "twig/twig": "^3.3"
+    },
+    "require-dev": {
+        "symfony/debug-bundle": "6.0.*",
+        "symfony/maker-bundle": "^1.43",
+        "symfony/stopwatch": "6.0.*",
+        "symfony/web-profiler-bundle": "6.0.*"
     },
     "config": {
         "allow-plugins": {
@@ -36,7 +43,10 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.0.30"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -76,8 +86,5 @@
             "allow-contrib": false,
             "require": "6.0.*"
         }
-    },
-    "require-dev": {
-        "symfony/maker-bundle": "*"
     }
 }
